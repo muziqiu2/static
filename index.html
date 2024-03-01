@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
     <!-- 引入Bootstrap图标库 -->
     <link href="https://cdn.bootcss.com/bootstrap-icons/1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- 引入国内CDN的glassmorphism.css -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/glassmorphism.css/1.1.4/glassmorphism.min.css">
+    <!-- 引入particles.js库 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <!-- 引入jQuery -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         body {
             font-family: 'STXinwei', sans-serif;
@@ -18,14 +24,17 @@
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.5); /* 半透明背景 */
+            border-radius: 20px; /* 圆润边角 */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
         h1, h2 {
             text-align: center;
-            font-size: 36px;
+            font-size: 48px;
+            color: #4CAF50;
+            margin-top: 0;
+            padding-top: 30px; /* 增加标题与粒子效果之间的间距 */
         }
         p {
             text-align: center;
@@ -41,27 +50,151 @@
             font-size: 60px;
             margin: 0 10px;
         }
+        /* 定义粒子效果的容器 */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            z-index: -1; /* 使粒子效果位于页面下方 */
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>魔法师静态资源仓库</h1>
-        <p>本仓库是由阿木进行创建并维护的静态资源仓库，主要用于个人项目及部分公共项目。本仓库采用CDN加速，无论是在国内还是国外都拥有着无与伦比的加载速度。<br>如果需要本仓库托管静态资源请联系邮箱：<br>amu@diaomu.cn</p>
-        <p id="lastUpdated">最后更新时间：</p>
-        <p id="lastUpdatedFiles">最后更新的文件类型：</p>
-        <p id="lastUpdatedComments">注释内容：</p>
-        <div class="file-types">
-            <i class="bi bi-filetype-js file-type-icon" title="JS 文件"></i>
-            <i class="bi bi-filetype-css file-type-icon" title="CSS 文件"></i>
-            <i class="bi bi-filetype-svg file-type-icon" title="SVG 文件"></i>
-            <i class="bi bi-filetype-woff file-type-icon" title="WOFF 文件"></i>
+    <!-- 粒子效果容器 -->
+    <div id="particles-js"></div>
+
+    <div class="glass">
+        <div class="container">
+            <h1>魔法师静态资源仓库</h1>
+            <p>本仓库是由阿木进行创建并维护的静态资源仓库，主要用于个人项目及部分公共项目。本仓库采用CDN加速，无论是在国内还是国外都拥有着无与伦比的加载速度。<br>如果需要本仓库托管静态资源请联系邮箱：<br>amu@diaomu.cn</p>
+            <p id="lastUpdated">最后更新时间：</p>
+            <p id="lastUpdatedFiles">最后更新的文件类型：</p>
+            <p id="lastUpdatedComments">注释内容：</p>
+            <div class="file-types">
+                <i class="bi bi-filetype-js file-type-icon" title="JS 文件"></i>
+                <i class="bi bi-filetype-css file-type-icon" title="CSS 文件"></i>
+                <i class="bi bi-filetype-svg file-type-icon" title="SVG 文件"></i>
+                <i class="bi bi-filetype-woff file-type-icon" title="WOFF 文件"></i>
+            </div>
         </div>
     </div>
 
-    <!-- 引入Bootstrap的JS和Popper.js -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <!-- 引入particles.js -->
     <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#4CAF50"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#4CAF50",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
         function updateLastUpdatedTime() {
             // 使用GitHub API获取仓库最后更新时间
             fetch('https://api.github.com/repos/muziqiu2/static/commits')
