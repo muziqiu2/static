@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,39 +18,49 @@
     <style>
         body {
             font-family: 'STXinwei', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
         }
+
         .container {
-            max-width: 800px;
-            margin: 50px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* 占用整个页面的高度 */
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.5); /* 半透明背景 */
-            border-radius: 20px; /* 圆润边角 */
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        h1, h2 {
-            text-align: center;
+
+        h1,
+        h2 {
             font-size: 48px;
             color: #4CAF50;
             margin-top: 0;
-            padding-top: 30px; /* 增加标题与粒子效果之间的间距 */
+            padding-top: 30px;
         }
+
         p {
-            text-align: center;
             margin-bottom: 20px;
             font-size: 24px;
         }
+
         .file-types {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
+
         .file-type-icon {
             font-size: 60px;
             margin: 0 10px;
         }
+
         /* 定义粒子效果的容器 */
         #particles-js {
             position: fixed;
@@ -57,28 +68,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fff;
-            z-index: -1; /* 使粒子效果位于页面下方 */
+            background-image: url('https://cdn.pixabay.com/photo/2016/11/14/05/29/internet-1821730_960_720.jpg'); /* 网络攻击的全球地图效果 */
+            background-size: cover;
+            z-index: -1;
         }
     </style>
 </head>
+
 <body>
     <!-- 粒子效果容器 -->
     <div id="particles-js"></div>
 
-    <div class="glass">
-        <div class="container">
-            <h1>魔法师静态资源仓库</h1>
-            <p>本仓库是由阿木进行创建并维护的静态资源仓库，主要用于个人项目及部分公共项目。本仓库采用CDN加速，无论是在国内还是国外都拥有着无与伦比的加载速度。<br>如果需要本仓库托管静态资源请联系邮箱：<br>amu@diaomu.cn</p>
-            <p id="lastUpdated">最后更新时间：</p>
-            <p id="lastUpdatedFiles">最后更新的文件类型：</p>
-            <p id="lastUpdatedComments">注释内容：</p>
-            <div class="file-types">
-                <i class="bi bi-filetype-js file-type-icon" title="JS 文件"></i>
-                <i class="bi bi-filetype-css file-type-icon" title="CSS 文件"></i>
-                <i class="bi bi-filetype-svg file-type-icon" title="SVG 文件"></i>
-                <i class="bi bi-filetype-woff file-type-icon" title="WOFF 文件"></i>
-            </div>
+    <div class="container glass">
+        <h1>魔法师静态资源仓库</h1>
+        <p>本仓库是由阿木进行创建并维护的静态资源仓库，主要用于个人项目及部分公共项目。本仓库采用CDN加速，无论是在国内还是国外都拥有着无与伦比的加载速度。<br>如果需要本仓库托管静态资源请联系邮箱：<br>amu@diaomu.cn</p>
+        <p id="lastUpdated">最后更新时间：</p>
+        <p id="lastUpdatedFiles">最后更新的文件类型：</p>
+        <p id="lastUpdatedComments">注释内容：</p>
+        <div class="file-types">
+            <i class="bi bi-filetype-js file-type-icon" title="JS 文件"></i>
+            <i class="bi bi-filetype-css file-type-icon" title="CSS 文件"></i>
+            <i class="bi bi-filetype-svg file-type-icon" title="SVG 文件"></i>
+            <i class="bi bi-filetype-woff file-type-icon" title="WOFF 文件"></i>
         </div>
     </div>
 
@@ -94,7 +105,7 @@
                     }
                 },
                 "color": {
-                    "value": "#4CAF50"
+                    "value": "#FFFFFF"
                 },
                 "shape": {
                     "type": "circle",
@@ -134,7 +145,7 @@
                 "line_linked": {
                     "enable": true,
                     "distance": 150,
-                    "color": "#4CAF50",
+                    "color": "#FFFFFF",
                     "opacity": 0.4,
                     "width": 1
                 },
@@ -230,4 +241,5 @@
         setInterval(updateLastUpdatedTime, 60000); // 每60秒更新一次
     </script>
 </body>
+
 </html>
