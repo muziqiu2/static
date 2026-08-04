@@ -4,239 +4,800 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>魔法师静态资源仓库</title>
-    <!-- 引入Bootstrap的CSS -->
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
-    <!-- 引入Bootstrap图标库 -->
-    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- 引入particles.js库 -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-    <!-- 引入jQuery -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta name="description" content="魔法师静态资源仓库（Magician Static Vault）—— 由阿木创建并维护的静态资源 CDN 仓库，托管 JS / CSS / SVG / WOFF 资源，国内外高速加载。">
+    <meta property="og:title" content="魔法师静态资源仓库">
+    <meta property="og:description" content="由阿木创建并维护的静态资源 CDN 仓库，托管 JS / CSS / SVG / WOFF 资源。">
+    <meta property="og:type" content="website">
+    <title>魔法师静态资源仓库 · Magician Static Vault</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='88'%3E%F0%9F%AA%84%3C/text%3E%3C/svg%3E">
+    <!-- 自托管字体，零外部依赖 -->
     <style>
-        body {
-            font-family: 'STXinwei', sans-serif;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 0;
+        @font-face {
+            font-family: "Vault";
+            src: url(woff/020831/Hubot-Sans.woff2) format("woff2");
+            font-display: swap;
         }
 
-        .container {
+        :root {
+            --bg-0: #04070d;
+            --bg-1: #0a1420;
+            --ink: #eaf4ee;
+            --ink-dim: #8fa8a4;
+            --ink-faint: #5c726e;
+            --line: rgba(255, 255, 255, .08);
+            --glass: rgba(10, 20, 30, .52);
+            --green: #6effb0;
+            --cyan: #3ee6ff;
+            --pink: #ff5da2;
+            --orange: #ffb46b;
+            --js: #f7df1e;
+            --css: #3d8bff;
+            --svg: #ff8a3d;
+            --woff: #ff5da2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scrollbar-color: rgba(110, 255, 176, .35) transparent;
+        }
+
+        body {
+            font-family: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 800px at 80% -10%, rgba(62, 230, 255, .10), transparent 60%),
+                radial-gradient(1000px 700px at 10% 110%, rgba(110, 255, 176, .08), transparent 60%),
+                linear-gradient(160deg, var(--bg-0), var(--bg-1) 55%, #060b12);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 细腻噪点质感 */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: .05;
+            background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='2'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        #particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+
+        .glow-a {
+            width: 420px;
+            height: 420px;
+            top: -120px;
+            right: -80px;
+            background: rgba(110, 255, 176, .10);
+        }
+
+        .glow-b {
+            width: 360px;
+            height: 360px;
+            bottom: -140px;
+            left: -100px;
+            background: rgba(62, 230, 255, .10);
+            animation-delay: -8s;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            to {
+                transform: translate3d(40px, 30px, 0) scale(1.15);
+            }
+        }
+
+        .vault {
+            position: relative;
+            z-index: 1;
+            width: min(960px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 26px 0 40px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ---------- 顶栏 ---------- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 2px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Vault", "PingFang SC", sans-serif;
+            font-weight: 800;
+            font-size: 17px;
+            letter-spacing: .06em;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(110, 255, 176, .16), rgba(62, 230, 255, .16));
+            border: 1px solid var(--line);
+            box-shadow: 0 0 22px rgba(110, 255, 176, .15) inset;
+        }
+
+        .brand b {
+            color: var(--green);
+            font-weight: 800;
+        }
+
+        .gh-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--ink-dim);
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .03);
+            transition: all .25s ease;
+        }
+
+        .gh-link:hover {
+            color: var(--green);
+            border-color: rgba(110, 255, 176, .45);
+            box-shadow: 0 0 18px rgba(110, 255, 176, .15);
+        }
+
+        /* ---------- 主视觉 ---------- */
+        main {
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            height: 100vh; /* 占用整个页面的高度 */
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            gap: 34px;
+            padding: 60px 0 40px;
+        }
+
+        .hero {
             text-align: center;
         }
 
-        h1,
-        h2 {
-            font-size: 48px;
-            color: #4CAF50;
-            margin-top: 0;
-            padding-top: 30px;
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: "Vault", sans-serif;
+            font-size: 12px;
+            letter-spacing: .32em;
+            text-transform: uppercase;
+            color: var(--green);
+            padding: 7px 14px;
+            border: 1px solid rgba(110, 255, 176, .25);
+            border-radius: 999px;
+            background: rgba(110, 255, 176, .06);
+            margin-bottom: 26px;
         }
 
-        p {
-            margin-bottom: 20px;
-            font-size: 24px;
+        .eyebrow::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+            animation: pulse 2.4s ease-in-out infinite;
         }
 
-        .file-types {
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: .35;
+                transform: scale(.8);
+            }
+        }
+
+        h1 {
+            font-family: "Vault", "PingFang SC", sans-serif;
+            font-weight: 800;
+            font-size: clamp(34px, 6vw, 64px);
+            line-height: 1.12;
+            letter-spacing: .02em;
+            background: linear-gradient(100deg, #dfffea 0%, var(--green) 38%, var(--cyan) 78%, #dfffea 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 7s linear infinite;
+            text-wrap: balance;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .sub {
+            max-width: 640px;
+            margin: 20px auto 0;
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--ink-dim);
+        }
+
+        .sub a {
+            color: var(--green);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(110, 255, 176, .5);
+            transition: color .2s;
+        }
+
+        .sub a:hover {
+            color: var(--cyan);
+        }
+
+        /* ---------- 资源类型卡片 ---------- */
+        .types {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 40px;
+        }
+
+        .type-card {
+            position: relative;
+            padding: 22px 14px 18px;
+            border-radius: 18px;
+            background: var(--glass);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            overflow: hidden;
+            transition: transform .3s cubic-bezier(.2, .8, .2, 1), border-color .3s, box-shadow .3s;
+        }
+
+        .type-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .35s;
+            background: radial-gradient(320px 140px at 50% -10%, var(--tc, var(--green)) 0%, transparent 70%);
+        }
+
+        .type-card:hover {
+            transform: translateY(-6px);
+            border-color: color-mix(in srgb, var(--tc, var(--green)) 55%, transparent);
+            box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--tc, var(--green)) 45%, transparent);
+        }
+
+        .type-card:hover::before {
+            opacity: .35;
+        }
+
+        .type-card .icon {
+            position: relative;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            font-family: "Vault", "Consolas", monospace;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--tc, var(--green));
+            transition: text-shadow .3s;
+        }
+
+        .type-card:hover .icon {
+            text-shadow: 0 0 22px var(--tc, var(--green));
+        }
+
+        .type-card h3 {
+            position: relative;
+            margin-top: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: .12em;
+        }
+
+        .type-card p {
+            position: relative;
+            margin-top: 6px;
+            font-size: 11.5px;
+            color: var(--ink-faint);
+            font-family: "Vault", "Consolas", monospace;
+            letter-spacing: .02em;
+        }
+
+        /* ---------- CTA ---------- */
+        .cta {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            gap: 14px;
+            margin-top: 36px;
+            flex-wrap: wrap;
         }
 
-        .file-type-icon {
-            font-size: 60px;
-            margin: 0 10px;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all .25s ease;
         }
 
-        /* 定义粒子效果的容器 */
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://cdn.pixabay.com/photo/2016/11/14/05/29/internet-1821730_960_720.jpg'); /* 网络攻击的全球地图效果 */
-            background-size: cover;
-            z-index: -1;
+        .btn-primary {
+            color: #04120a;
+            background: linear-gradient(120deg, var(--green), var(--cyan));
+            box-shadow: 0 8px 30px -8px rgba(110, 255, 176, .55);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px -8px rgba(62, 230, 255, .6);
+        }
+
+        .btn-ghost {
+            color: var(--ink);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(255, 255, 255, .3);
+            background: rgba(255, 255, 255, .08);
+        }
+
+        /* ---------- 仓库状态 ---------- */
+        .status {
+            border-radius: 20px;
+            background: var(--glass);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            padding: 22px 24px;
+        }
+
+        .status-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            color: var(--ink);
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .status-head code {
+            font-family: "Vault", "Consolas", monospace;
+            font-size: 11px;
+            color: var(--green);
+            border: 1px solid rgba(110, 255, 176, .3);
+            border-radius: 6px;
+            padding: 2px 7px;
+            background: rgba(110, 255, 176, .08);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px var(--green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 28px;
+            padding-top: 18px;
+        }
+
+        .stat label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: .16em;
+            color: var(--ink-faint);
+            margin-bottom: 7px;
+        }
+
+        .stat p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--ink);
+            word-break: break-all;
+        }
+
+        .stat .value-mono {
+            font-family: "Vault", "Consolas", monospace;
+            font-size: 14px;
+        }
+
+        .stat-full {
+            grid-column: 1 / -1;
+        }
+
+        .stat p.placeholder {
+            color: var(--ink-faint);
+        }
+
+        .stat p.offline {
+            color: var(--orange);
+        }
+
+        /* ---------- 页脚 ---------- */
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--ink-faint);
+            padding: 18px 0 6px;
+            letter-spacing: .04em;
+        }
+
+        footer a {
+            color: var(--ink-dim);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--green);
+        }
+
+        /* ---------- 入场动画 ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(26px);
+            animation: rise .8s cubic-bezier(.2, .8, .2, 1) forwards;
+        }
+
+        .reveal-1 {
+            animation-delay: .06s;
+        }
+
+        .reveal-2 {
+            animation-delay: .16s;
+        }
+
+        .reveal-3 {
+            animation-delay: .28s;
+        }
+
+        .reveal-4 {
+            animation-delay: .4s;
+        }
+
+        @keyframes rise {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .glow,
+            h1,
+            .pulse-dot,
+            .eyebrow::before {
+                animation: none;
+            }
+            .reveal {
+                animation-duration: .01s;
+            }
+        }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 760px) {
+            .types {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            main {
+                padding: 44px 0 30px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- 粒子效果容器 -->
-    <div id="particles-js"></div>
+    <canvas id="particles" aria-hidden="true"></canvas>
+    <div class="glow glow-a"></div>
+    <div class="glow glow-b"></div>
 
-    <div class="container glass">
-        <h1>魔法师静态资源仓库</h1>
-        <p>本仓库是由阿木进行创建并维护的静态资源仓库，主要用于个人项目及部分公共项目。本仓库采用CDN加速，无论是在国内还是国外都拥有着无与伦比的加载速度。<br>如果需要本仓库托管静态资源请联系邮箱：<br>amu@diaomu.cn</p>
-        <p id="lastUpdated">最后更新时间：</p>
-        <p id="lastUpdatedFiles">最后更新的文件类型：</p>
-        <p id="lastUpdatedComments">注释内容：</p>
-        <div class="file-types">
-            <i class="bi bi-filetype-js file-type-icon" title="JS 文件"></i>
-            <i class="bi bi-filetype-css file-type-icon" title="CSS 文件"></i>
-            <i class="bi bi-filetype-svg file-type-icon" title="SVG 文件"></i>
-            <i class="bi bi-filetype-woff file-type-icon" title="WOFF 文件"></i>
-        </div>
+    <div class="vault">
+        <header class="topbar reveal">
+            <a class="brand" href="./" aria-label="魔法师静态资源仓库">
+                <span class="brand-mark">🪄</span>
+                magic<b>static</b>
+            </a>
+            <a class="gh-link" href="https://github.com/muziqiu2/static" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.35.77 1.05.77 2.12 0 1.53-.01 2.76-.01 3.14 0 .3.2.67.8.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/>
+                </svg>
+                GitHub
+            </a>
+        </header>
+
+        <main>
+            <section class="hero reveal reveal-1">
+                <p class="eyebrow">Magician Static Vault</p>
+                <h1>魔法师静态资源仓库</h1>
+                <p class="sub">
+                    本仓库由阿木创建并维护，用于个人及部分公共项目。采用 CDN 加速，无论国内国外皆享高速加载。<br>
+                    如需托管静态资源，请联系 <a href="mailto:jyyg@vip.qq.com">jyyg@vip.qq.com</a>
+                </p>
+
+                <div class="types">
+                    <a class="type-card" style="--tc: var(--js)" href="https://github.com/muziqiu2/static/tree/master/js" target="_blank" rel="noopener">
+                        <div class="icon">{ }</div>
+                        <h3>JS</h3>
+                        <p>JavaScript</p>
+                    </a>
+                    <a class="type-card" style="--tc: var(--css)" href="https://github.com/muziqiu2/static/tree/master/css" target="_blank" rel="noopener">
+                        <div class="icon">#</div>
+                        <h3>CSS</h3>
+                        <p>StyleSheet</p>
+                    </a>
+                    <a class="type-card" style="--tc: var(--svg)" href="https://github.com/muziqiu2/static/tree/master/svg" target="_blank" rel="noopener">
+                        <div class="icon">◇</div>
+                        <h3>SVG</h3>
+                        <p>Vector</p>
+                    </a>
+                    <a class="type-card" style="--tc: var(--woff)" href="https://github.com/muziqiu2/static/tree/master/woff" target="_blank" rel="noopener">
+                        <div class="icon">Aa</div>
+                        <h3>WOFF</h3>
+                        <p>Font</p>
+                    </a>
+                </div>
+
+                <div class="cta">
+                    <a class="btn btn-primary" href="https://github.com/muziqiu2/static" target="_blank" rel="noopener">浏览资源库</a>
+                    <a class="btn btn-ghost" href="mailto:jyyg@vip.qq.com">联系作者</a>
+                </div>
+            </section>
+
+            <section class="status reveal reveal-3" aria-label="仓库状态">
+                <div class="status-head">
+                    <span class="pulse-dot"></span>
+                    仓库状态
+                    <code>master</code>
+                </div>
+                <div class="status-grid">
+                    <div class="stat">
+                        <label>最后更新时间</label>
+                        <p id="lastUpdated" class="value-mono placeholder">--</p>
+                    </div>
+                    <div class="stat">
+                        <label>最后更新的文件类型</label>
+                        <p id="lastUpdatedFiles" class="value-mono placeholder">--</p>
+                    </div>
+                    <div class="stat stat-full">
+                        <label>注释内容</label>
+                        <p id="lastUpdatedComments" class="placeholder">--</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="reveal reveal-4">
+            © 魔法师静态资源仓库 · 由 <a href="mailto:jyyg@vip.qq.com">阿木</a> 维护 · <a href="https://static.api.mofashi.ltd" target="_blank" rel="noopener">static.api.mofashi.ltd</a>
+        </footer>
     </div>
 
-    <!-- 引入particles.js -->
     <script>
-        particlesJS("particles-js", {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
-                },
-                "color": {
-                    "value": "#FFFFFF"
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    },
-                    "polygon": {
-                        "nb_sides": 5
-                    },
-                    "image": {
-                        "src": "img/github.svg",
-                        "width": 100,
-                        "height": 100
-                    }
-                },
-                "opacity": {
-                    "value": 0.5,
-                    "random": false,
-                    "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 3,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 40,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#FFFFFF",
-                    "opacity": 0.4,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 6,
-                    "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
+        // ========== 粒子星网（自绘，替代 particles.js，零外部依赖） ==========
+        (function () {
+            var canvas = document.getElementById('particles');
+            var ctx = canvas.getContext('2d');
+            var particles = [];
+            var mouse = { x: null, y: null };
+            var W, H;
+            var COLORS = ['110,255,176', '62,230,255', '255,255,255'];
+
+            function resize() {
+                var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                W = canvas.width = window.innerWidth * dpr;
+                H = canvas.height = window.innerHeight * dpr;
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                init();
+            }
+
+            function init() {
+                var count = Math.min(90, Math.floor(W * H / 14000));
+                particles = [];
+                for (var i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * W,
+                        y: Math.random() * H,
+                        vx: (Math.random() - .5) * .35 * (window.devicePixelRatio || 1),
+                        vy: (Math.random() - .5) * .35 * (window.devicePixelRatio || 1),
+                        r: (Math.random() * 1.6 + .6) * (window.devicePixelRatio || 1),
+                        c: COLORS[Math.floor(Math.random() * COLORS.length)]
+                    });
                 }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": {
-                        "distance": 400,
-                        "line_linked": {
-                            "opacity": 1
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                var linkDist = 130 * (window.devicePixelRatio || 1);
+
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > W) p.vx *= -1;
+                    if (p.y < 0 || p.y > H) p.vy *= -1;
+
+                    // 与鼠标连线
+                    if (mouse.x !== null) {
+                        var dx = p.x - mouse.x * (window.devicePixelRatio || 1);
+                        var dy = p.y - mouse.y * (window.devicePixelRatio || 1);
+                        var d2 = dx * dx + dy * dy;
+                        if (d2 < linkDist * linkDist) {
+                            ctx.strokeStyle = 'rgba(' + p.c + ',.22)';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(mouse.x * (window.devicePixelRatio || 1), mouse.y * (window.devicePixelRatio || 1));
+                            ctx.stroke();
                         }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
+                    }
+
+                    ctx.fillStyle = 'rgba(' + p.c + ',.55)';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // 粒子间连线
+                for (var i = 0; i < particles.length; i++) {
+                    for (var j = i + 1; j < particles.length; j++) {
+                        var a = particles[i],
+                            b = particles[j];
+                        var dx = a.x - b.x,
+                            dy = a.y - b.y;
+                        var dist = dx * dx + dy * dy;
+                        if (dist < linkDist * linkDist) {
+                            ctx.strokeStyle = 'rgba(' + a.c + ',' + (0.10 * (1 - dist / (linkDist * linkDist))) + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
                     }
                 }
-            },
-            "retina_detect": true
-        });
+                requestAnimationFrame(draw);
+            }
 
-        function updateLastUpdatedTime() {
-            // 使用GitHub API获取仓库最后更新时间
-            fetch('https://api.github.com/repos/muziqiu2/static/commits')
-                .then(response => response.json())
-                .then(data => {
-                    // 更新日期
-                    const lastCommit = data[0];
-                    const lastUpdatedTime = new Date(lastCommit.commit.author.date).toLocaleString('zh-CN');
-                    document.getElementById('lastUpdated').textContent = '最后更新时间：' + lastUpdatedTime;
+            canvas.addEventListener('mousemove', function (e) {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            canvas.addEventListener('mouseleave', function () {
+                mouse.x = null;
+                mouse.y = null;
+            });
 
-                    // 获取最后更新的文件类型和注释内容
-                    fetch(lastCommit.url)
-                        .then(response => response.json())
-                        .then(commitData => {
-                            const fileTypes = new Set();
-                            commitData.files.forEach(file => {
-                                const fileType = file.filename.split('.').pop().toUpperCase();
-                                fileTypes.add(fileType);
-                            });
-                            const files = Array.from(fileTypes).join(', ');
-                            document.getElementById('lastUpdatedFiles').textContent = '最后更新的文件类型：' + files;
-                            document.getElementById('lastUpdatedComments').textContent = '注释内容：' + commitData.commit.message;
-                        })
-                        .catch(error => console.error('获取提交信息失败：', error));
-                })
-                .catch(error => console.error('获取仓库信息失败：', error));
-        }
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            resize();
+            window.addEventListener('resize', resize);
+            if (!reduceMotion) draw();
+        })();
 
-        // 页面加载时更新最后更新时间
-        updateLastUpdatedTime();
+        // ========== 仓库状态：优先静态 JSON，回退 GitHub API，失败兜底 ==========
+        (function () {
+            var elTime = document.getElementById('lastUpdated');
+            var elTypes = document.getElementById('lastUpdatedFiles');
+            var elMsg = document.getElementById('lastUpdatedComments');
+            var fetching = false;
 
-        // 定时更新最后更新时间
-        setInterval(updateLastUpdatedTime, 60000); // 每60秒更新一次
+            function render(data) {
+                if (!data) {
+                    elTime.textContent = '暂时无法获取';
+                    elTime.className = 'offline';
+                    elTypes.textContent = '--';
+                    elTypes.className = 'offline';
+                    elMsg.textContent = 'GitHub 接口暂不可用，稍后再试';
+                    elMsg.className = 'offline';
+                    return;
+                }
+                elTime.textContent = new Date(data.date).toLocaleString('zh-CN');
+                elTime.className = 'value-mono';
+                elTypes.textContent = data.types || '--';
+                elTypes.className = 'value-mono';
+                elMsg.textContent = data.message || '--';
+                elMsg.className = '';
+            }
+
+            async function fromStaticJson() {
+                // 加时间戳绕过缓存，确保拿到最新
+                var res = await fetch('update.json?t=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('no update.json (' + res.status + ')');
+                var d = await res.json();
+                if (!d || !d.date) throw new Error('invalid update.json');
+                return { date: d.date, types: d.types, message: d.message };
+            }
+
+            async function fromGitHubApi() {
+                var res = await fetch('https://api.github.com/repos/muziqiu2/static/commits?per_page=1');
+                if (!res.ok) throw new Error('github api (' + res.status + ')');
+                var list = await res.json();
+                if (!list.length) throw new Error('empty commits');
+                var commit = list[0];
+                var detail = await fetch(commit.url);
+                var cd = await detail.json();
+                var types = Array.from(new Set((cd.files || []).map(function (f) {
+                    var name = f.filename.split('.').pop();
+                    return name ? name.toUpperCase() : '';
+                }).filter(Boolean))).join(', ');
+                return { date: commit.commit.author.date, types: types, message: cd.commit.message };
+            }
+
+            async function load() {
+                if (fetching) return;
+                fetching = true;
+                try {
+                    try {
+                        render(await fromStaticJson());
+                    } catch (e) {
+                        render(await fromGitHubApi());
+                    }
+                } catch (e) {
+                    render(null);
+                } finally {
+                    fetching = false;
+                }
+            }
+
+            // 仅在首次加载与切回前台时刷新，避免触发 GitHub API 限流
+            load();
+            document.addEventListener('visibilitychange', function () {
+                if (!document.hidden) load();
+            });
+        })();
     </script>
 </body>
 
